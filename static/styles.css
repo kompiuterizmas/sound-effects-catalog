@@ -1,0 +1,546 @@
+:root {
+    color-scheme: light dark;
+
+    --bg-color: #f7f7f7;
+    --panel-color: #ffffff;
+    --text-color: #222222;
+    --muted-text-color: #666666;
+    --border-color: #dddddd;
+
+    --input-bg: #ffffff;
+    --input-text: #222222;
+    --input-border: #cfcfcf;
+
+    --button-bg: #ffffff;
+    --button-text: #222222;
+    --button-border: #cfcfcf;
+    --button-hover-bg: #f0f0f0;
+
+    --waveform-bg: #fafafa;
+
+    --success-bg: #e8f5e9;
+    --success-text: #1b5e20;
+
+    --error-bg: #ffebee;
+    --error-text: #b71c1c;
+
+    --shadow-color: rgba(0, 0, 0, 0.08);
+    --toast-shadow-color: rgba(0, 0, 0, 0.22);
+
+    --overlay-bg: rgba(0, 0, 0, 0.58);
+    --overlay-bg-hover: rgba(0, 0, 0, 0.78);
+    --overlay-text: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-color: #121212;
+        --panel-color: #1e1e1e;
+        --text-color: #eeeeee;
+        --muted-text-color: #aaaaaa;
+        --border-color: #333333;
+
+        --input-bg: #181818;
+        --input-text: #eeeeee;
+        --input-border: #444444;
+
+        --button-bg: #242424;
+        --button-text: #eeeeee;
+        --button-border: #444444;
+        --button-hover-bg: #303030;
+
+        --waveform-bg: #151515;
+
+        --success-bg: #16351f;
+        --success-text: #b8f5c6;
+
+        --error-bg: #3a1717;
+        --error-text: #ffb8b8;
+
+        --shadow-color: rgba(0, 0, 0, 0.38);
+        --toast-shadow-color: rgba(0, 0, 0, 0.55);
+
+        --overlay-bg: rgba(0, 0, 0, 0.65);
+        --overlay-bg-hover: rgba(0, 0, 0, 0.85);
+        --overlay-text: #ffffff;
+    }
+}
+
+html,
+body {
+    min-height: 100%;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0 24px 24px 24px;
+    background: var(--bg-color);
+    color: var(--text-color);
+}
+
+h1 {
+    margin: 0 0 8px 0;
+    color: var(--text-color);
+}
+
+.top-bar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+
+    background: var(--bg-color);
+    padding: 24px 0 12px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+.app-loading button {
+    pointer-events: none;
+    opacity: 0.55;
+}
+.loading-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+
+    display: none;
+    align-items: center;
+    justify-content: center;
+
+    background: color-mix(in srgb, var(--bg-color) 88%, transparent);
+    backdrop-filter: blur(2px);
+}
+
+.app-loading .loading-overlay {
+    display: flex;
+}
+
+.loading-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+
+    padding: 22px 26px;
+    border-radius: 14px;
+
+    background: var(--panel-color);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 8px 24px var(--toast-shadow-color);
+}
+
+.loading-spinner {
+    width: 34px;
+    height: 34px;
+
+    border-radius: 50%;
+    border: 4px solid var(--border-color);
+    border-top-color: var(--success-text);
+
+    animation: loading-spin 0.8s linear infinite;
+}
+
+.loading-text {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--muted-text-color);
+}
+
+@keyframes loading-spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+.info {
+    margin-bottom: 14px;
+    color: var(--muted-text-color);
+}
+
+input,
+select {
+    box-sizing: border-box;
+    font-size: 15px;
+    background: var(--input-bg);
+    color: var(--input-text);
+    border: 1px solid var(--input-border);
+    border-radius: 6px;
+}
+
+input:focus,
+select:focus {
+    outline: 2px solid var(--success-text);
+    outline-offset: 1px;
+}
+
+#searchInput {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 10px;
+}
+
+.filter-bar {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.filter-bar label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--muted-text-color);
+}
+
+.filter-bar select {
+    width: 100%;
+    padding: 8px 9px;
+}
+
+.top-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+button {
+    padding: 7px 11px;
+    cursor: pointer;
+
+    border: 1px solid var(--button-border);
+    border-radius: 6px;
+
+    background: var(--button-bg);
+    color: var(--button-text);
+
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+button:hover {
+    background: var(--button-hover-bg);
+}
+
+button:focus {
+    outline: 2px solid var(--success-text);
+    outline-offset: 1px;
+}
+
+.status-toast {
+    position: fixed;
+    top: 18px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+    z-index: 9999;
+
+    display: none;
+    min-width: 260px;
+    max-width: 520px;
+    padding: 12px 18px;
+
+    border-radius: 8px;
+    background: var(--success-bg);
+    color: var(--success-text);
+
+    font-size: 14px;
+    font-weight: 700;
+    text-align: center;
+
+    box-shadow: 0 8px 24px var(--toast-shadow-color);
+    opacity: 0;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.status-toast.visible {
+    display: block;
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.status-toast.error {
+    background: var(--error-bg);
+    color: var(--error-text);
+}
+
+.catalog-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 14px 0;
+}
+
+.audio-row {
+    display: grid;
+    grid-template-areas:
+        "play"
+        "file"
+        "waveform";
+    grid-template-columns: 1fr;
+    gap: 12px;
+
+    padding: 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    background: var(--panel-color);
+
+    box-shadow: 0 2px 8px var(--shadow-color);
+}
+
+.play-area {
+    grid-area: play;
+    min-width: 0;
+}
+
+.play-area audio {
+    width: 100%;
+    min-width: 220px;
+}
+
+.audio-duration {
+    margin-top: 6px;
+    font-size: 12px;
+    color: var(--muted-text-color);
+}
+
+.file-area {
+    grid-area: file;
+    min-width: 0;
+}
+
+.filename-line {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+.rename-input {
+    flex: 1 1 auto;
+    min-width: 0;
+
+    width: auto;
+    padding: 9px 10px;
+    margin: 0;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.format-badge {
+    flex: 0 0 auto;
+
+    padding: 6px 8px;
+    border-radius: 999px;
+    border: 1px solid var(--border-color);
+
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+
+    color: var(--muted-text-color);
+    background: var(--bg-color);
+}
+
+.file-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.open-folder-button {
+    max-width: 130px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.danger-button {
+    border-color: var(--error-text);
+    color: var(--error-text);
+}
+
+.danger-button:hover {
+    background: var(--error-bg);
+}
+
+.waveform-area {
+    grid-area: waveform;
+    position: relative;
+
+    min-width: 0;
+    min-height: 92px;
+
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--waveform-bg);
+    border: 1px solid var(--border-color);
+}
+
+.waveform-visual {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    min-height: 92px;
+    padding: 10px 12px 34px 12px;
+    box-sizing: border-box;
+}
+
+.waveform-meta {
+    flex: 0 0 120px;
+
+    font-size: 10px;
+    line-height: 1.35;
+    color: var(--muted-text-color);
+
+    overflow: hidden;
+}
+
+.waveform-meta div {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.waveform-meta strong {
+    color: var(--text-color);
+    font-weight: 700;
+}
+
+.waveform {
+    display: block;
+    flex: 0 1 auto;
+
+    height: 58px;
+    object-fit: fill;
+}
+
+.waveform-ellipsis {
+    margin-left: 8px;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--muted-text-color);
+}
+
+.waveform-actions {
+    position: absolute;
+    right: 8px;
+    bottom: 6px;
+    z-index: 2;
+
+    display: flex;
+    justify-content: flex-end;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.waveform-actions button {
+    padding: 4px 7px;
+    border-radius: 999px;
+
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.1;
+
+    color: var(--overlay-text);
+    background: var(--overlay-bg);
+    border: 1px solid transparent;
+}
+
+.waveform-actions button:hover {
+    background: var(--overlay-bg-hover);
+}
+
+.similarity-badge {
+    position: absolute;
+    left: 8px;
+    bottom: 6px;
+    z-index: 2;
+
+    padding: 4px 7px;
+    border-radius: 999px;
+
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.1;
+
+    color: var(--overlay-text);
+    background: var(--overlay-bg);
+}
+
+.currently-playing {
+    outline: 2px solid var(--success-text);
+    outline-offset: -2px;
+}
+
+.similar-selected {
+    outline: 2px solid var(--success-text);
+    outline-offset: -2px;
+}
+
+.similar-match {
+    background: color-mix(in srgb, var(--success-bg) 45%, var(--panel-color));
+}
+
+.similar-divider {
+    padding: 12px;
+    text-align: center;
+    font-weight: 700;
+    color: var(--muted-text-color);
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+}
+.favorite-button {
+    color: var(--success-text);
+}
+
+.favorite-row {
+    border-color: var(--success-text);
+}
+
+@media (min-width: 760px) {
+    .filter-bar {
+        grid-template-columns: repeat(2, minmax(160px, 1fr));
+    }
+
+    .audio-row {
+        grid-template-areas:
+            "play file"
+            "waveform waveform";
+        grid-template-columns: minmax(260px, 320px) minmax(260px, 1fr);
+        align-items: start;
+    }
+}
+
+@media (min-width: 1120px) {
+    .filter-bar {
+        grid-template-columns: repeat(5, minmax(150px, 1fr));
+    }
+
+    .audio-row {
+        grid-template-areas:
+            "play file waveform";
+        grid-template-columns: 320px minmax(300px, 420px) minmax(360px, 1fr);
+        align-items: center;
+    }
+
+    .waveform {
+        height: 64px;
+    }
+}
+
+@media (min-width: 1450px) {
+    .audio-row {
+        grid-template-columns: 340px minmax(360px, 480px) minmax(520px, 1fr);
+    }
+}

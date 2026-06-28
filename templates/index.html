@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Sound Effects Catalog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="app-loading">
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-box">
+            <div class="loading-spinner"></div>
+            <div id="loadingText" class="loading-text">Loading...</div>
+        </div>
+    </div>
+    <div id="statusMessage" class="status-toast"></div>
+
+    <header class="top-bar">
+        <h1>Sound catalog</h1>
+
+        <div class="info">
+            Files found: {{ file_count }} | Showing: <span id="visibleCount">{{ file_count }}</span>
+        </div>
+
+        <input
+            type="text"
+            id="searchInput"
+            placeholder="Search by name, folder, format..."
+            autocomplete="off"
+        >
+
+        <div class="filter-bar">
+            <label>
+                Duration
+                <select id="durationFilter">
+                    <option value="">Any</option>
+                    <option value="very_short">Very short</option>
+                    <option value="short">Short</option>
+                    <option value="medium">Medium</option>
+                    <option value="long">Long</option>
+                </select>
+            </label>
+
+            <label>
+                Start
+                <select id="startFilter">
+                    <option value="">Any</option>
+                    <option value="sharp">Sharp start</option>
+                    <option value="soft">Soft start</option>
+                    <option value="slow_build">Slow build</option>
+                </select>
+            </label>
+
+            <label>
+                Shape
+                <select id="shapeFilter">
+                    <option value="">Any</option>
+                    <option value="hit_fade">Hit and fade</option>
+                    <option value="rising">Rising</option>
+                    <option value="falling">Falling</option>
+                    <option value="steady">Steady</option>
+                    <option value="pulsing">Pulsing</option>
+                    <option value="multiple_hits">Multiple hits</option>
+                </select>
+            </label>
+
+            <label>
+                Energy
+                <select id="energyFilter">
+                    <option value="">Any</option>
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                </select>
+            </label>
+
+            <label>
+                Ending
+                <select id="endingFilter">
+                    <option value="">Any</option>
+                    <option value="short_tail">Short tail</option>
+                    <option value="long_tail">Long tail</option>
+                    <option value="abrupt_cut">Abrupt cut</option>
+                    <option value="fade_out">Fade out</option>
+                </select>
+            </label>
+        </div>
+
+        <div class="top-actions">
+            <button onclick="resetFilters()">Reset filters</button>
+            <button onclick="showOnlyFavorites()">Show favorites</button>
+            <button id="clearSimilarButton" onclick="clearSimilarSearch()" style="display: none;">
+                Clear similar search
+            </button>
+
+            <button onclick="cleanGeneratedFiles()">Clean generated files</button>
+        </div>
+    </header>
+
+    <main id="catalogList" class="catalog-list">
+        {% for item in rows %}
+        <article
+            class="audio-row"
+            data-full-path="{{ item.full_path }}"
+            data-audio-features='{{ item.audio_features | tojson }}'
+            data-name="{{ item.name }}"
+            data-folder="{{ item.folder }}"
+            data-duration="{{ item.duration }}"
+            data-type="{{ item.type }}"
+            data-duration-class="{{ item.duration_class }}"
+            data-start-class="{{ item.start_class }}"
+            data-shape-class="{{ item.shape_class }}"
+            data-energy-class="{{ item.energy_class }}"
+            data-ending-class="{{ item.ending_class }}"
+            data-peak-position-class="{{ item.peak_position_class }}"
+            data-peak-count="{{ item.peak_count }}"
+            data-attack-score="{{ item.attack_score }}"
+            data-decay-score="{{ item.decay_score }}"
+        >
+            <section class="play-area">
+                <audio controls preload="none">
+                    <source src="{{ item.path }}">
+                    Your browser does not support audio.
+                </audio>
+                <div class="audio-duration">{{ item.duration_text }}</div>
+            </section>
+
+            <section class="file-area">
+                <div class="filename-line">
+                    <input
+                        class="rename-input"
+                        value="{{ item.name_stem }}"
+                        title="{{ item.name_stem }}"
+                    >
+                    <span class="format-badge">{{ item.type }}</span>
+                </div>
+
+                <div class="file-actions">
+                    <button onclick="toggleFavorite(this)" class="favorite-button">☆ Favorite</button>
+
+                    <button onclick="renameFile(this)">Rename</button>
+
+                    <button
+                        onclick="openFolder(this)"
+                        class="open-folder-button"
+                        title="{{ item.full_path }}"
+                        aria-label="{{ item.full_path }}"
+                    >
+                        Open folder
+                    </button>
+                    <button onclick="deleteFile(this)" class="danger-button">Delete file</button>
+                </div>
+            </section>
+
+            <section class="waveform-area">
+                <div class="waveform-visual">
+                    <div class="waveform-meta">
+                        <div><strong>Duration:</strong> {{ item.duration_class | replace("_", " ") }}</div>
+                        <div><strong>Start:</strong> {{ item.start_class | replace("_", " ") }}</div>
+                        <div><strong>Shape:</strong> {{ item.shape_class | replace("_", " ") }}</div>
+                        <div><strong>Energy:</strong> {{ item.energy_class | replace("_", " ") }}</div>
+                        <div><strong>Ending:</strong> {{ item.ending_class | replace("_", " ") }}</div>
+                        <div><strong>Peak:</strong> {{ item.peak_position_class | replace("_", " ") }}</div>
+                    </div>
+
+                    <img
+                        src="{{ item.waveform }}"
+                        class="waveform"
+                        style="width: {{ item.waveform_display_percent | default(100, true) }}%"
+                        alt=""
+                    >
+
+                    {% if item.waveform_is_truncated | default(false, true) %}
+                    <span class="waveform-ellipsis">...</span>
+                    {% endif %}
+                </div>
+
+                <div class="waveform-actions">
+                    <button onclick="findSameBeginningFromWaveform(this)">Find same beginning</button>
+                    <button onclick="findSimilarFromWaveform(this)">Find similar</button>
+                </div>
+            </section>
+        </article>
+        {% endfor %}
+    </main>
+
+    <script defer src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
