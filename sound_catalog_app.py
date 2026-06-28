@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import soundfile as sf
 import webbrowser
+import os
 import threading
 import time
 import sys
@@ -1014,6 +1015,17 @@ def index():
         file_count=len(CATALOG_ROWS)
     )
 
+@app.route("/shutdown", methods=["POST"])
+def shutdown_app():
+    def stop_app():
+        os._exit(0)
+
+    threading.Timer(0.5, stop_app).start()
+
+    return jsonify({
+        "success": True,
+        "message": "Application is shutting down."
+    })
 
 @app.route("/audio")
 def audio_file():

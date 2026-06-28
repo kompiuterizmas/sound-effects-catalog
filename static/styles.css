@@ -210,6 +210,26 @@ select:focus {
     gap: 8px;
 }
 
+.title-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.title-row h1 {
+    margin: 0;
+}
+
+.exit-app-button {
+    background: #d96c7c;
+    color: white;
+    border: none;
+}
+
+.exit-app-button:hover {
+    background: #c85b6c;
+}
+
 button {
     padding: 7px 11px;
     cursor: pointer;

@@ -17,8 +17,10 @@
     <div id="statusMessage" class="status-toast"></div>
 
     <header class="top-bar">
-        <h1>Sound catalog</h1>
-
+        <div class="title-row">
+            <h1>Sound catalog</h1>
+            <button onclick="exitApp()" class="exit-app-button">Exit app</button>
+        </div>
         <div class="info">
             Files found: {{ file_count }} | Showing: <span id="visibleCount">{{ file_count }}</span>
         </div>

@@ -322,3 +322,12 @@ This app is intended for local use.
 
 It is not designed as a public web service. It serves local files from the selected source folder and should be used only on a trusted local machine.
 
+### Closing the app
+
+When the app is exported as a Windows `.exe`, closing the browser tab does not automatically stop the local Flask server.
+
+For this reason, the app includes an **Exit app** button next to the main title.
+
+Use this button to properly close the application after finishing work.
+
+The button sends a shutdown request to the local app and then stops the running `.exe` process.

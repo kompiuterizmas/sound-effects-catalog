@@ -719,6 +719,30 @@ function showOnlyFavorites() {
     updateVisibleCount();
     showStatusMessage("Showing favorites.");
 }
+
+async function exitApp() {
+    const confirmed = confirm("Close Sound Effects Catalog?");
+
+    if (!confirmed) {
+        return;
+    }
+
+    try {
+        await fetch("/shutdown", {
+            method: "POST"
+        });
+
+        document.body.innerHTML = `
+            <div style="padding: 40px; font-family: Arial, sans-serif;">
+                <h2>Sound Effects Catalog closed</h2>
+                <p>You can now close this browser tab.</p>
+            </div>
+        `;
+    } catch (error) {
+        alert("App was closed.");
+    }
+}
+
 window.findSameBeginningFromWaveform = findSameBeginningFromWaveform;
 window.findSimilarFromWaveform = findSimilarFromWaveform;
 window.clearSimilarSearch = clearSimilarSearch;
@@ -729,5 +753,6 @@ window.openFolder = openFolder;
 window.deleteFile = deleteFile;
 window.toggleFavorite = toggleFavorite;
 window.showOnlyFavorites = showOnlyFavorites;
+window.exitApp = exitApp;
 
 document.body.classList.remove("app-loading");
