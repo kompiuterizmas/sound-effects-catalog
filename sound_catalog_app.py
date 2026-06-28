@@ -984,7 +984,11 @@ def main():
 
     rows = []
 
-    for file_path in tqdm(audio_files, desc="Creating catalog"):
+    for file_path in tqdm(
+        audio_files,
+        desc="Scanning audio files",
+        disable=getattr(sys, "frozen", False) or sys.stdout is None
+    ):
         file_cache_key = get_file_cache_key(file_path)
         cached_item = catalog_cache.get(file_cache_key)
         item, file_signature = build_catalog_item(file_path, source, cached_item)

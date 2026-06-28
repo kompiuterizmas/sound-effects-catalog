@@ -269,8 +269,56 @@ The HTML template can also use cache-busting for JavaScript:
 
 Increase the version number after changing `app.js`.
 
+## Exporting to Windows `.exe`
+
+The app can be exported to a standalone Windows executable using PyInstaller.
+
+Install PyInstaller:
+
+```bash
+pip install pyinstaller
+```
+
+If the `pyinstaller` command is not recognized, run it through Python:
+
+```bash
+python -m PyInstaller --onefile --windowed --name SoundEffectsCatalog --add-data "templates;templates" --add-data "static;static" --add-binary "ffmpeg.exe;." sound_catalog_app.py
+```
+
+The exported file will be created here:
+
+```text
+dist\SoundEffectsCatalog.exe
+```
+
+### Notes for `.exe` builds
+
+The app is built with `--windowed`, so it runs without a terminal window.
+
+Because of this, terminal progress bars such as `tqdm` must be disabled when the app is running as a packaged executable.
+
+The app detects this using:
+
+```python
+getattr(sys, "frozen", False)
+```
+
+Generated runtime files and folders may appear next to the executable or inside the working folder:
+
+```text
+config.ini
+catalog_cache.json
+waveforms/
+previews/
+deleted_files/
+```
+
+These files are normal and should not be committed to GitHub.
+
+
 ## Notes
 
 This app is intended for local use.
 
 It is not designed as a public web service. It serves local files from the selected source folder and should be used only on a trusted local machine.
+
